@@ -1,0 +1,109 @@
+-- sql 문
+
+--유저
+CREATE TABLE user_table (
+u_no NUMBER NOT NULL CONSTRAINT u_pk PRIMARY KEY,
+u_name VARCHAR2(30) NOT NULL,
+u_id VARCHAR2(30) NOT NULL,
+u_password VARCHAR2(30) NOT NULL,
+u_tel CHAR(13) NOT NULL
+);
+
+--등록하기
+CREATE TABLE goods_table (
+g_no NUMBER NOT NULL CONSTRAINT g_pk PRIMARY KEY,
+g_writer NUMBER NOT NULL CONSTRAINT g_fk REFERENCES user_table(u_no),
+g_sub VARCHAR2(300) NOT NULL,
+g_img LONG NOT NULL,
+g_stime VARCHAR2(1000) NOT NULL,
+g_text VARCHAR2(4000) NOT NULL,
+g_regdate DATE NOT NULL,
+g_price NUMBER NOT NULL,
+g_buyer VARCHAR2(30)
+);
+
+--소통하기
+CREATE TABLE community_table (
+c_no NUMBER NOT NULL CONSTRAINT c_pk PRIMARY KEY,
+c_writer NUMBER NOT NULL CONSTRAINT c_fk REFERENCES user_table(u_no),
+c_sub VARCHAR2(100) NOT NULL,
+c_text LONG NOT NULL,
+c_regdate varchar2(50) not null,
+c_readcnt number not null,
+c_replycnt number
+);
+
+--신청하기
+CREATE TABLE offer_table (
+o_no NUMBER NOT NULL CONSTRAINT o_pk PRIMARY KEY,
+o_writer NUMBER NOT NULL CONSTRAINT o_fk REFERENCES user_table(u_no),
+o_sub VARCHAR2(100) NOT NULL,
+o_text LONG NOT NULL,
+o_regdate varchar2(50) not null,
+o_readcnt number not null,
+o_replycnt number
+);
+
+--거래내역
+CREATE TABLE tradeList_table(
+t_no NUMBER NOT NULL CONSTRAINT t_pk PRIMARY KEY,
+t_subno NUMBER NOT NULL CONSTRAINT t_fk REFERENCES goods_table(g_no),
+t_buyer VARCHAR2(30) NOT NULL,
+t_pay NUMBER NOT NULL
+);
+
+--시퀀스
+CREATE SEQUENCE user_seq
+START WITH 1
+INCREMENT BY 1
+NOCACHE;
+
+CREATE SEQUENCE offer_seq
+START WITH 1
+INCREMENT BY 1
+NOCACHE;
+
+CREATE SEQUENCE community_seq
+START WITH 1
+INCREMENT BY 1
+NOCACHE;
+
+CREATE SEQUENCE goods_seq
+START WITH 1
+INCREMENT BY 1
+NOCACHE;
+
+CREATE SEQUENCE tradelist_seq
+START WITH 1
+INCREMENT BY 1
+NOCACHE;
+
+CREATE SEQUENCE community_reply_seq
+START WITH 1
+INCREMENT BY 1
+NOCACHE;
+
+CREATE SEQUENCE offer_reply_seq
+START WITH 1
+INCREMENT BY 1
+NOCACHE;
+
+CREATE TABLE auction_reply (
+r_text LONG NOT NULL,
+r_writer varchar2(30) NOT NULL,
+r_no NUMBER NOT NULL
+);
+
+CREATE TABLE community_reply (
+cr_no NUMBER NOT NULL CONSTRAINT cr_pk PRIMARY KEY,
+cr_writer varchar2(50) NOT NULL,
+c_no_re NUMBER NOT NULL CONSTRAINT c_no_fk REFERENCES community_table(c_no),
+cr_text LONG NOT NULL
+);
+
+CREATE TABLE offer_reply (
+or_no NUMBER NOT NULL CONSTRAINT or_pk PRIMARY KEY,
+or_writer varchar2(50) NOT NULL,
+o_no_re NUMBER NOT NULL CONSTRAINT o_no_fk REFERENCES offer_table(o_no),
+or_text LONG NOT NULL
+);
